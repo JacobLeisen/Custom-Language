@@ -89,7 +89,7 @@ export function tokenize (sourceCode: string): Token[] {
 
 
 
-const source = "let x = 45";
+const source = "let x = 45 * ( 4 / 3);";
 for (const token of tokenize(source)) {
     console.log(token);
 }
