@@ -11,6 +11,10 @@ export enum TokenType {
     Let,
 }
 
+const KEYWORDS: Record<string, TokenType> = {
+    "let": TokenType.Let,
+}
+
 export interface Token {
     value: string;
     type: TokenType;
@@ -30,6 +34,10 @@ function isint (str: string) {
     return (c >= bounds[0] && c <= bounds[1]);
 }
 
+function isWhitespace (str: string) {
+    return str == ' ' || str == "\n" || str == "\t";
+}
+
 export function tokenize (sourceCode: string): Token[] {
     const tokens = new Array<Token>();
     // Note if making series lexer don't split as it bleeds a lot of memory
@@ -47,7 +55,6 @@ export function tokenize (sourceCode: string): Token[] {
             tokens.push(token(src.shift(), TokenType.Equals))
         } else {
             // Handle multicharacter tokens
-
             // Build num token
             if (isint(src[0])) {
                 let num = "";
@@ -61,8 +68,19 @@ export function tokenize (sourceCode: string): Token[] {
                 while (src.length > 0 && isalpha(src[0])) {
                     ident += src.shift();
                 }
+                // Check if ident is a keyword
+                const reserved = KEYWORDS[ident];
+                if (reserved == undefined) {
+                    tokens.push(token(ident, TokenType.Identifer));
+                } else {
+                    tokens.push(token(ident, reserved));
+                }
+
                 
-                tokens.push(token(ident, TokenType.Identifer));
+            } else if (isWhitespace(src[0])) {
+                src.shift(); // Skip whitespace
+            } else {
+                throw new Error("Unrecognized charcter found in source: " + src[0]);
             }
         }
 
