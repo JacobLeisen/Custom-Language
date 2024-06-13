@@ -83,10 +83,13 @@ export function tokenize (sourceCode: string): Token[] {
                 throw new Error("Unrecognized charcter found in source: " + src[0]);
             }
         }
-
-
-
     }
-
     return tokens;
+}
+
+
+
+const source = "let x = 45";
+for (const token of tokenize(source)) {
+    console.log(token);
 }
