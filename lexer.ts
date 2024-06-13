@@ -48,6 +48,22 @@ export function tokenize (sourceCode: string): Token[] {
         } else {
             // Handle multicharacter tokens
 
+            // Build num token
+            if (isint(src[0])) {
+                let num = "";
+                while (src.length > 0 && isint(src[0])) {
+                    num += src.shift();
+                }
+
+                tokens.push(token(num, TokenType.Number));
+            } else if (isalpha(src[0])) {
+                let ident = "";
+                while (src.length > 0 && isalpha(src[0])) {
+                    ident += src.shift();
+                }
+                
+                tokens.push(token(ident, TokenType.Identifer));
+            }
         }
 
 
